@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="uk">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>  Піднімаєм власний Joplin server | forblog
+</title>
+  <link rel="canonical" href="https://foresle.github.io/forblog/install_joplin_server.html">
+
+
+  <link rel="stylesheet" href="https://foresle.github.io/forblog/theme/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://foresle.github.io/forblog/theme/css/fontawesome.min.css">
+  <link rel="stylesheet" href="https://foresle.github.io/forblog/theme/css/pygments/monokai.min.css">
+  <link rel="stylesheet" href="https://foresle.github.io/forblog/theme/css/theme.css">
+  <link rel="stylesheet" href="https://foresle.github.io/forblog/theme/css/oldstyle.css">
+
+  
+  <meta name="description" content="Піднімаємо свій власний сервер для нотаток">
+
+
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+<div class="row">
+    <div class="col-sm-4">
+      <a href="https://foresle.github.io/forblog/">
+        <img class="img-fluid rounded" src=https://foresle.github.io/forblog/images/mr-robot_red-wheelbarrow_looney-esmail.jpg alt="forblog">
+      </a>
+    </div>
+  <div class="col-sm-8">
+    <h1 class="title"><a href="https://foresle.github.io/forblog/">forblog</a></h1>
+      <p class="text-muted">foresle blog</p>
+      <ul class="list-inline">
+          <li class="list-inline-item"><a href="https://opulus.space/" target="_blank">My Matrix server</a></li>
+            <li class=" list-inline-item text-muted">|</li>
+          <li class="list-inline-item"><a class="fab fa-github" href="https://github.com/nairobilug/pelican-alchemy" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fab fa-hashtag" href="https://matrix.to/#/@foresle:matrix.opulus.space" target="_blank"></a></li>
+      </ul>
+  </div>
+</div>    </div>
+  </header>
+
+  <div class="main">
+    <div class="container">
+      <h1>  Піднімаєм власний Joplin server
+</h1>
+      <hr>
+  <article class="article">
+    <header>
+      <ul class="list-inline">
+        <li class="list-inline-item text-muted" title="2022-03-27T17:00:00+03:00">
+          <i class="fas fa-clock"></i>
+          нд 27 березня 2022
+        </li>
+        <li class="list-inline-item">
+          <i class="fas fa-folder-open"></i>
+          <a href="https://foresle.github.io/forblog/category/tutorial.html">Tutorial</a>
+        </li>
+          <li class="list-inline-item">
+            <i class="fas fa-tag"></i>
+              <a href="https://foresle.github.io/forblog/tag/joplin.html">#joplin</a>,               <a href="https://foresle.github.io/forblog/tag/server.html">#server</a>,               <a href="https://foresle.github.io/forblog/tag/my_config.html">#my_config</a>          </li>
+      </ul>
+    </header>
+    <div class="content">
+      <h3>Система</h3>
+<p><strong>Ubuntu 20.04 LTS</strong></p>
+<h3>Інструкція</h3>
+<ul>
+<li>Оновлюємо репозиторії, та встановлюємо такі пакети</li>
+</ul>
+<div class="highlight"><pre><span></span><code>sudo apt update
+sudo apt upgrade
+sudo apt install ufw nginx vim git postgresql
+</code></pre></div>
+
+<ul>
+<li>Також потрібно встановити Docker</li>
+</ul>
+<p>Офіційна <a href="https://docs.docker.com/engine/install/">інструкція</a>.</p>
+<ul>
+<li>Створюємо конфіг для Joplin</li>
+</ul>
+<p>Файл <code>.env</code></p>
+<div class="highlight"><pre><span></span><code>APP_BASE_URL=&lt;Ваш білий IP&gt;
+APP_PORT=22300
+DB_CLIENT=pg
+POSTGRES_PASSWORD=&lt;Пароль&gt;
+POSTGRES_DATABASE=joplin
+POSTGRES_USER=joplin
+POSTGRES_PORT=5432
+POSTGRES_HOST=127.0.0.1
+</code></pre></div>
+
+<ul>
+<li>Створюємо БД</li>
+</ul>
+<div class="highlight"><pre><span></span><code>sudo -u postgres psql
+create user <span class="s2">&quot;joplin&quot;</span> with encrypted password <span class="s1">&#39;&lt;Пароль&gt;&#39;</span><span class="p">;</span>
+create database joplin owner joplin<span class="p">;</span>
+</code></pre></div>
+
+<ul>
+<li>Вмикаємо Joplin Server</li>
+</ul>
+<div class="highlight"><pre><span></span><code>sudo docker run -d  --restart always --env-file /home/joplin/.env --net<span class="o">=</span>host --add-host<span class="o">=</span>host.docker.internal:127.0.0.1 -p <span class="m">22300</span>:22300 joplin/server:latest
+</code></pre></div>
+
+<ul>
+<li>Налаштовуємо проксі</li>
+</ul>
+<p>Конфіг Nginx:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">server</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="err">listen</span><span class="w"> </span><span class="err">80</span><span class="w"> </span><span class="err">default_server</span><span class="p">;</span><span class="w"></span>
+
+<span class="w">    </span><span class="err">server_name</span><span class="w"> </span><span class="err">_</span><span class="p">;</span><span class="w"></span>
+
+<span class="w">    </span><span class="err">client_max_body_size</span><span class="w"> </span><span class="err">20M</span><span class="p">;</span><span class="w"></span>
+
+<span class="w">    </span><span class="err">location</span><span class="w"> </span><span class="err">/</span><span class="w"> </span><span class="err">{</span><span class="w"></span>
+<span class="w">        </span><span class="err">proxy_set_header</span><span class="w"> </span><span class="err">Host</span><span class="w"> </span><span class="err">$host</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="err">proxy_set_header</span><span class="w"> </span><span class="err">X-Real-IP</span><span class="w"> </span><span class="err">$remote_addr</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="err">proxy_pass</span><span class="w"> </span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mf">127.0.0.1</span><span class="o">:</span><span class="mi">22300</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="err">}</span><span class="w"></span>
+</code></pre></div>
+
+<p>Шлях до файлу <code>/etc/nginx/sites-available/</code></p>
+<p>Зробіть сиволічне посилання та видаліть дефолтний конфіг</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span> /etc/nginx/sites-enable/
+ln -s /etc/nginx/sites-available/&lt;Назва конфігу&gt;
+sudo rm default
+</code></pre></div>
+
+<p>Перевіряємо чи все ок</p>
+<div class="highlight"><pre><span></span><code>sudo nginx -t <span class="o">&amp;&amp;</span> sudo nginx -s reload
+</code></pre></div>
+
+<ul>
+<li>Закриваємо інші порти для безпеки</li>
+</ul>
+<div class="highlight"><pre><span></span><code>sudo ufw allow <span class="m">80</span>
+sudo ufw allow <span class="m">20</span>
+sudo ufw <span class="nb">enable</span>
+</code></pre></div>
+
+<h3>Підсумок</h3>
+<p>Ми отримали власний Joplin сервер.</p>
+<p><strong>P.S.:</strong> дефолтний юзер <code>admin@localhost</code> <code>admin</code></p>
+<h3>Джерела</h3>
+<p><a href="https://github.com/laurent22/joplin/blob/dev/packages/server/README.md">Офіційна інструкція для Joplin Server</a></p>
+    </div>
+  </article>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+<div class="row">
+  <ul class="col-sm-6 list-inline">
+    <li class="list-inline-item"><a href="https://foresle.github.io/forblog/archives.html">Archives</a></li>
+    <li class="list-inline-item"><a href="https://foresle.github.io/forblog/categories.html">Categories</a></li>
+      <li class="list-inline-item"><a href="https://foresle.github.io/forblog/tags.html">Tags</a></li>
+  </ul>
+  <p class="col-sm-6 text-sm-right text-muted">
+    Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
+    / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+  </p>
+</div>    </div>
+  </footer>
+
+</body>
+
+</html>
