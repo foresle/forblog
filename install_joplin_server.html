@@ -68,91 +68,93 @@
     </header>
     <div class="content">
       <h3>Система</h3>
-<p><strong>Ubuntu 20.04 LTS</strong></p>
-<h3>Інструкція</h3>
-<ul>
-<li>Оновлюємо репозиторії, та встановлюємо такі пакети</li>
-</ul>
-<div class="highlight"><pre><span></span><code>sudo apt update
-sudo apt upgrade
-sudo apt install ufw nginx vim git postgresql
+<div class="highlight"><pre><span></span><code>**Ubuntu 20.04 LTS**
 </code></pre></div>
 
+<h3>Інструкція</h3>
 <ul>
-<li>Також потрібно встановити Docker</li>
-</ul>
+<li>
+<p>Оновлюємо репозиторії, та встановлюємо такі пакети</p>
+<p><code>sh
+sudo apt update
+sudo apt upgrade
+sudo apt install ufw nginx vim git postgresql</code></p>
+</li>
+<li>
+<p>Також потрібно встановити Docker</p>
 <p>Офіційна <a href="https://docs.docker.com/engine/install/">інструкція</a>.</p>
-<ul>
-<li>Створюємо конфіг для Joplin</li>
-</ul>
+</li>
+<li>
+<p>Створюємо конфіг для Joplin</p>
 <p>Файл <code>.env</code></p>
-<div class="highlight"><pre><span></span><code>APP_BASE_URL=&lt;Ваш білий IP&gt;
+<p><code>env
+APP_BASE_URL=&lt;Ваш білий IP&gt;
 APP_PORT=22300
 DB_CLIENT=pg
 POSTGRES_PASSWORD=&lt;Пароль&gt;
 POSTGRES_DATABASE=joplin
 POSTGRES_USER=joplin
 POSTGRES_PORT=5432
-POSTGRES_HOST=127.0.0.1
-</code></pre></div>
-
-<ul>
-<li>Створюємо БД</li>
-</ul>
-<div class="highlight"><pre><span></span><code>sudo -u postgres psql
-create user <span class="s2">&quot;joplin&quot;</span> with encrypted password <span class="s1">&#39;&lt;Пароль&gt;&#39;</span><span class="p">;</span>
-create database joplin owner joplin<span class="p">;</span>
-</code></pre></div>
-
-<ul>
-<li>Вмикаємо Joplin Server</li>
-</ul>
-<div class="highlight"><pre><span></span><code>sudo docker run -d  --restart always --env-file /home/joplin/.env --net<span class="o">=</span>host --add-host<span class="o">=</span>host.docker.internal:127.0.0.1 -p <span class="m">22300</span>:22300 joplin/server:latest
-</code></pre></div>
-
-<ul>
-<li>Налаштовуємо проксі</li>
-</ul>
+POSTGRES_HOST=127.0.0.1</code></p>
+</li>
+<li>
+<p>Створюємо БД</p>
+<p><code>sh
+sudo -u postgres psql
+create user "joplin" with encrypted password '&lt;Пароль&gt;';
+create database joplin owner joplin;</code></p>
+</li>
+<li>
+<p>Вмикаємо Joplin Server</p>
+<p><code>sh
+sudo docker run -d  --restart always --env-file /home/joplin/.env --net=host --add-host=host.docker.internal:127.0.0.1 -p 22300:22300 joplin/server:latest</code></p>
+</li>
+<li>
+<p>Налаштовуємо проксі</p>
 <p>Конфіг Nginx:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">server</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="err">listen</span><span class="w"> </span><span class="err">80</span><span class="w"> </span><span class="err">default_server</span><span class="p">;</span><span class="w"></span>
+<p>```
+server {
+    listen 80 default_server;</p>
+<div class="highlight"><pre><span></span><code><span class="nt">server_name</span><span class="w"> </span><span class="nt">_</span><span class="o">;</span><span class="w"></span>
 
-<span class="w">    </span><span class="err">server_name</span><span class="w"> </span><span class="err">_</span><span class="p">;</span><span class="w"></span>
+<span class="nt">client_max_body_size</span><span class="w"> </span><span class="nt">20M</span><span class="o">;</span><span class="w"></span>
 
-<span class="w">    </span><span class="err">client_max_body_size</span><span class="w"> </span><span class="err">20M</span><span class="p">;</span><span class="w"></span>
-
-<span class="w">    </span><span class="err">location</span><span class="w"> </span><span class="err">/</span><span class="w"> </span><span class="err">{</span><span class="w"></span>
-<span class="w">        </span><span class="err">proxy_set_header</span><span class="w"> </span><span class="err">Host</span><span class="w"> </span><span class="err">$host</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="err">proxy_set_header</span><span class="w"> </span><span class="err">X-Real-IP</span><span class="w"> </span><span class="err">$remote_addr</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="err">proxy_pass</span><span class="w"> </span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mf">127.0.0.1</span><span class="o">:</span><span class="mi">22300</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="err">}</span><span class="w"></span>
+<span class="nt">location</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="err">proxy_set_header</span><span class="w"> </span><span class="err">Host</span><span class="w"> </span><span class="err">$host</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="err">proxy_set_header</span><span class="w"> </span><span class="err">X-Real-IP</span><span class="w"> </span><span class="err">$remote_addr</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="err">proxy_pass</span><span class="w"> </span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mf">127.0.0.1</span><span class="o">:</span><span class="mi">22300</span><span class="p">;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </code></pre></div>
 
-<p>Шлях до файлу <code>/etc/nginx/sites-available/</code></p>
+<p>}
+<code>``
+Шлях до файлу</code>/etc/nginx/sites-available/`</p>
 <p>Зробіть сиволічне посилання та видаліть дефолтний конфіг</p>
-<div class="highlight"><pre><span></span><code><span class="nb">cd</span> /etc/nginx/sites-enable/
+<p><code>sh
+cd /etc/nginx/sites-enable/
 ln -s /etc/nginx/sites-available/&lt;Назва конфігу&gt;
-sudo rm default
-</code></pre></div>
-
+sudo rm default</code></p>
 <p>Перевіряємо чи все ок</p>
-<div class="highlight"><pre><span></span><code>sudo nginx -t <span class="o">&amp;&amp;</span> sudo nginx -s reload
-</code></pre></div>
-
-<ul>
-<li>Закриваємо інші порти для безпеки</li>
+<p><code>sh
+sudo nginx -t &amp;&amp; sudo nginx -s reload</code></p>
+</li>
+<li>
+<p>Закриваємо інші порти для безпеки</p>
+<p><code>sh
+sudo ufw allow 80
+sudo ufw allow 20
+sudo ufw enable</code></p>
+</li>
 </ul>
-<div class="highlight"><pre><span></span><code>sudo ufw allow <span class="m">80</span>
-sudo ufw allow <span class="m">20</span>
-sudo ufw <span class="nb">enable</span>
+<h3>Підсумок</h3>
+<div class="highlight"><pre><span></span><code><span class="n">Ми</span><span class="w"> </span><span class="n">отримали</span><span class="w"> </span><span class="n">власний</span><span class="w"> </span><span class="n">Joplin</span><span class="w"> </span><span class="n">сервер</span><span class="p">.</span><span class="w"></span>
+
+<span class="o">**</span><span class="n">P</span><span class="p">.</span><span class="n">S</span><span class="p">.</span><span class="o">:**</span><span class="w"> </span><span class="n">дефолтний</span><span class="w"> </span><span class="n">юзер</span><span class="w"> </span><span class="n n-Quoted">`admin@localhost`</span><span class="w"> </span><span class="n n-Quoted">`admin`</span><span class="w"></span>
 </code></pre></div>
 
-<h3>Підсумок</h3>
-<p>Ми отримали власний Joplin сервер.</p>
-<p><strong>P.S.:</strong> дефолтний юзер <code>admin@localhost</code> <code>admin</code></p>
 <h3>Джерела</h3>
-<p><a href="https://github.com/laurent22/joplin/blob/dev/packages/server/README.md">Офіційна інструкція для Joplin Server</a></p>
+<div class="highlight"><pre><span></span><code>[Офіційна інструкція для Joplin Server](https://github.com/laurent22/joplin/blob/dev/packages/server/README.md)
+</code></pre></div>
     </div>
   </article>
     </div>
