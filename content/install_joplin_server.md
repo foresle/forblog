@@ -1,10 +1,10 @@
-Title: Піднімаєм власний Joplin server
+Title: Підіймаємо власний Joplin сервер
 Date: 2022-03-27 17:00
 Category: Tutorial
 Tags: joplin, server, my_config
 Slug: install_joplin_server
 Authors: foresle
-Summary: Піднімаємо свій власний сервер для нотаток
+Summary: Свій сервер для нотаток
 
 ### Система
 
@@ -75,7 +75,7 @@ server {
 
 Шлях до файлу `/etc/nginx/sites-available/`
 
-Зробіть сиволічне посилання та видаліть дефолтний конфіг
+Зробіть символічне посилання та видаліть дефолтний конфіг
 
 ```sh
 cd /etc/nginx/sites-enable/
