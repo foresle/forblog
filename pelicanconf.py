@@ -1,6 +1,6 @@
 AUTHOR = 'foresle'
 SITENAME = 'forblog'
-SITEURL = 'http://forblog.live'
+SITEURL = 'https://forblog.live'
 
 PATH = 'content'
 
