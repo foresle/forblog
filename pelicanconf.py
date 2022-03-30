@@ -33,7 +33,7 @@ THEME = "alchemy"
 HIDE_AUTHORS = True
 PYGMENTS_STYLE = 'monokai'
 ICONS = (
-    ('github', 'https://github.com/nairobilug/pelican-alchemy'),
+    ('github', 'https://github.com/foresle'),
     ('hashtag', 'https://matrix.to/#/@foresle:matrix.opulus.space'),
     ('mastodon', 'https://social.net.ua/foresle')
 )
