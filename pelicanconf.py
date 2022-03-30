@@ -29,7 +29,7 @@ DEFAULT_PAGINATION = 8
 
 # Pelican Alchemy theme settings
 
-THEME = "pelican-alchemy/alchemy"
+THEME = "alchemy"
 HIDE_AUTHORS = True
 PYGMENTS_STYLE = 'monokai'
 ICONS = (
