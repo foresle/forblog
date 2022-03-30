@@ -93,7 +93,7 @@ sudo nginx -t && sudo nginx -s reload
 
 ```sh
 sudo ufw allow 80
-sudo ufw allow 20
+sudo ufw allow 22
 sudo ufw enable
 ```
 
