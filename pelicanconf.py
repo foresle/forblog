@@ -34,7 +34,8 @@ HIDE_AUTHORS = True
 PYGMENTS_STYLE = 'monokai'
 ICONS = (
     ('github', 'https://github.com/nairobilug/pelican-alchemy'),
-    ('hashtag', 'https://matrix.to/#/@foresle:matrix.opulus.space')
+    ('hashtag', 'https://matrix.to/#/@foresle:matrix.opulus.space'),
+    ('mastodont', 'https://social.net.ua/foresle')
 )
 SITESUBTITLE = 'foresle blog'
 SITEIMAGE = '/images/mr-robot_red-wheelbarrow_looney-esmail.jpg'
