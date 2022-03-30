@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="uk">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>  Joplin server smtp | forblog
+</title>
+  <link rel="canonical" href="https://forblog.live/joplin_server_smtp.html">
+
+
+  <link rel="stylesheet" href="https://forblog.live/theme/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://forblog.live/theme/css/fontawesome.min.css">
+  <link rel="stylesheet" href="https://forblog.live/theme/css/pygments/monokai.min.css">
+  <link rel="stylesheet" href="https://forblog.live/theme/css/theme.css">
+  <link rel="stylesheet" href="https://forblog.live/theme/css/oldstyle.css">
+
+  
+  <meta name="description" content="Додаємо email до Joplin сервер">
+
+
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+<div class="row">
+    <div class="col-sm-4">
+      <a href="https://forblog.live/">
+        <img class="img-fluid rounded" src=https://forblog.live/images/mr-robot_red-wheelbarrow_looney-esmail.jpg alt="forblog">
+      </a>
+    </div>
+  <div class="col-sm-8">
+    <h1 class="title"><a href="https://forblog.live/">forblog</a></h1>
+      <p class="text-muted">foresle blog</p>
+      <ul class="list-inline">
+          <li class="list-inline-item"><a href="https://opulus.space/" target="_blank">My Matrix server</a></li>
+            <li class=" list-inline-item text-muted">|</li>
+          <li class="list-inline-item"><a class="fab fa-github" href="https://github.com/nairobilug/pelican-alchemy" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fab fa-hashtag" href="https://matrix.to/#/@foresle:matrix.opulus.space" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fab fa-mastodon" href="https://social.net.ua/foresle" target="_blank"></a></li>
+      </ul>
+  </div>
+</div>    </div>
+  </header>
+
+  <div class="main">
+    <div class="container">
+      <h1>  Joplin server smtp
+</h1>
+      <hr>
+  <article class="article">
+    <header>
+      <ul class="list-inline">
+        <li class="list-inline-item text-muted" title="2022-03-30T14:00:00+03:00">
+          <i class="fas fa-clock"></i>
+          ср 30 березня 2022
+        </li>
+        <li class="list-inline-item">
+          <i class="fas fa-folder-open"></i>
+          <a href="https://forblog.live/category/tutorial.html">Tutorial</a>
+        </li>
+          <li class="list-inline-item">
+            <i class="fas fa-tag"></i>
+              <a href="https://forblog.live/tag/joplin.html">#joplin</a>,               <a href="https://forblog.live/tag/server.html">#server</a>,               <a href="https://forblog.live/tag/my_config.html">#my_config</a>,               <a href="https://forblog.live/tag/smtp.html">#smtp</a>          </li>
+      </ul>
+    </header>
+    <div class="content">
+      <h4>Перша частина: <a href="https://forblog.live/install_joplin_server.html">Підіймаємо власний Joplin сервер</a></h4>
+<p>Email потрібний для того, щоб ви могли відновити пароль або змінити пошту в обліковому записі Joplin.</p>
+<h3>Система</h3>
+<p><strong>Ubuntu 20.04 LTS</strong></p>
+<h3>Інструкція</h3>
+<p>Я використав Gmail в якості smtp серверу.
+Якщо ви будете використовувати її теж, не забудьте ввімкнути цей параметр: <a href="https://myaccount.google.com/lesssecureapps">Доступ для менш безпечних додатків</a> </p>
+<h4>Додайте в конфіг такі рядки</h4>
+<p>Файл <code>.env</code></p>
+<div class="highlight"><pre><span></span><code><span class="n">MAILER_ENABLED</span><span class="o">=</span><span class="mi">1</span><span class="w"></span>
+<span class="n">MAILER_HOST</span><span class="o">=</span><span class="n">smtp</span><span class="p">.</span><span class="n">gmail</span><span class="p">.</span><span class="n">com</span><span class="w"></span>
+<span class="n">MAILER_PORT</span><span class="o">=</span><span class="mi">465</span><span class="w"></span>
+<span class="n">MAILER_SECURE</span><span class="o">=</span><span class="mi">1</span><span class="w"></span>
+<span class="n">MAILER_AUTH_USER</span><span class="o">=&lt;</span><span class="n">ВАШ</span><span class="w"> </span><span class="n">EMAIl</span><span class="o">&gt;</span><span class="w"></span>
+<span class="n">MAILER_AUTH_PASSWORD</span><span class="o">=&lt;</span><span class="n">ПАРОЛЬ</span><span class="o">&gt;</span><span class="w"></span>
+<span class="n">MAILER_NOREPLY_NAME</span><span class="o">=</span><span class="n">JoplinServer</span><span class="w"></span>
+<span class="n">MAILER_NOREPLY_EMAIL</span><span class="o">=</span><span class="n">noreply</span><span class="nv">@example</span><span class="p">.</span><span class="n">com</span><span class="w"></span>
+</code></pre></div>
+
+<h4>Перезапустіть контейнер</h4>
+<div class="highlight"><pre><span></span><code>sudo docker restart &lt;ID&gt;
+</code></pre></div>
+
+<p>Щоб дізнатися id контейнерів:</p>
+<div class="highlight"><pre><span></span><code>sudo docker ps
+</code></pre></div>
+
+<h3>Джерела</h3>
+<p><a href="https://discourse.joplinapp.org/t/joplin-server-2-2-6-email-settings/18608/5">Форум Joplin</a></p>
+    </div>
+  </article>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+<div class="row">
+  <ul class="col-sm-6 list-inline">
+    <li class="list-inline-item"><a href="https://forblog.live/archives.html">Archives</a></li>
+    <li class="list-inline-item"><a href="https://forblog.live/categories.html">Categories</a></li>
+      <li class="list-inline-item"><a href="https://forblog.live/tags.html">Tags</a></li>
+  </ul>
+  <p class="col-sm-6 text-sm-right text-muted">
+    Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
+    / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+  </p>
+</div>    </div>
+  </footer>
+
+</body>
+
+</html>
