@@ -6,7 +6,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <title>  Піднімаєм власний Joplin server | forblog
+  <title>  Підіймаємо власний Joplin сервер | forblog
 </title>
   <link rel="canonical" href="http://forblog.live/install_joplin_server.html">
 
@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="http://forblog.live/theme/css/oldstyle.css">
 
   
-  <meta name="description" content="Піднімаємо свій власний сервер для нотаток">
+  <meta name="description" content="Свій сервер для нотаток">
 
 
 </head>
@@ -47,7 +47,7 @@
 
   <div class="main">
     <div class="container">
-      <h1>  Піднімаєм власний Joplin server
+      <h1>  Підіймаємо власний Joplin сервер
 </h1>
       <hr>
   <article class="article">
@@ -118,7 +118,7 @@ create database joplin owner joplin<span class="p">;</span>
 </code></pre></div>
 
 <p>Шлях до файлу <code>/etc/nginx/sites-available/</code></p>
-<p>Зробіть сиволічне посилання та видаліть дефолтний конфіг</p>
+<p>Зробіть символічне посилання та видаліть дефолтний конфіг</p>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span> /etc/nginx/sites-enable/
 ln -s /etc/nginx/sites-available/&lt;Назва конфігу&gt;
 sudo rm default
